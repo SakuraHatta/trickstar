@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 054a4ba8d737ab1438141c0a2b0e0258, type: 3}
+  m_Name: ItemDataList
+  m_EditorClassIdentifier: 
+  ItemDataList:
+  - id: 0
+    name: "\u6D88\u3057\u30B4\u30E0"
+    price: 3
+    image: {fileID: 0}
+    info: "\u5730\u9762\u3084\u58C1\u3092\u6D88\u3059\u3053\u3068\u304C\u3067\u304D\u307E\u3059\u3002"
+  - id: 1
+    name: "\u4E0D\u601D\u8B70\u306A\u7B46"
+    price: 2
+    image: {fileID: 0}
+    info: "\u60F3\u50CF\u529B\u3092\u63CF\u3053\u3046!"
+  - id: 2
+    name: "\u30C0\u30D6\u30EB\u30B8\u30E3\u30F3\u30D7\u30B9\u30AF\u30EA\u30D7\u30C8"
+    price: 4
+    image: {fileID: 0}
+    info: "\u30C0\u30D6\u30EB\u30B8\u30E3\u30F3\u30D7\u304C\u3067\u304D\u308B\u305E!"
+  - id: 3
+    name: "\u6D88\u3048\u308B\u304F\u3093.exe"
+    price: 2
+    image: {fileID: 0}
+    info: "\u3053\u308C\u3092\u4F7F\u3046\u3068\u7121\u6575\u306B\u306A\u308C\u308B!"

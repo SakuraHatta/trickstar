@@ -1,0 +1,28 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : CharacterBase
+{
+    //[SerializeField]
+
+    //ÉLÅ[ì¸óÕ
+    public override void KeyController()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            
+        }
+    }
+
+    //ï‡Ç≠èàóù
+    public override void Walk()
+    {
+        rigid.x = speed;
+    }
+
+}
