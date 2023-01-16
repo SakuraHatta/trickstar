@@ -11,8 +11,8 @@ public class ItemListData : ScriptableObject   //ƒAƒCƒeƒ€‚Ìƒf[ƒ^ƒNƒ‰ƒX‚ğƒŠƒXƒg‰
 [System.Serializable]
 public class ItemData   //ƒAƒCƒeƒ€‚Ìƒf[ƒ^ƒNƒ‰ƒX
 {
-    public int id;         //ƒAƒCƒeƒ€ID
     public string name;    //ƒAƒCƒeƒ€–¼
+    public int id;         //ƒAƒCƒeƒ€ID
     public int price;      //ƒAƒCƒeƒ€‚Ì’l’i
     public Sprite image;   //ƒAƒCƒeƒ€‚Ì‰æ‘œ
     public string info;    //ƒAƒCƒeƒ€‚Ìà–¾•¶
