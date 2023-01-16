@@ -25,10 +25,6 @@ public class DigScript : MonoBehaviour
             {
                 BlockTileMap.SetTile(TilePos, null);    //その位置にあるタイルを空っぽにする
             }
-            else
-            {
-                Debug.Log("そこには消すものはないよ!");
-            }
         }
 
         if (Input.GetMouseButtonDown(1))    //右クリック
@@ -38,10 +34,6 @@ public class DigScript : MonoBehaviour
             if (BlockTileMap.GetTile(TilePos) == null)  //もしその位置のタイルが空っぽのとき
             {
                 BlockTileMap.SetTile(TilePos, GroundTile);  //その場所のタイルをGroundTileに変更する
-            }
-            else
-            {
-                Debug.Log("そこには置けないよ!");
             }
         }
     }
