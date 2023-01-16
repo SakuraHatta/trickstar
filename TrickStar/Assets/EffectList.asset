@@ -9,17 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfd960ae427d6744794ffb2e8e33d5f9, type: 3}
-  m_Name: CharacterDataList
+  m_Script: {fileID: 11500000, guid: 03adec074fcacca4694f19ac136b3d15, type: 3}
+  m_Name: EffectList
   m_EditorClassIdentifier: 
-  CharacterDataList:
-  - name: Player
-    maxhp: 1
-    attack: 0
-    jumppower: 10
-    speed: 5
-  - name: Nomal
-    maxhp: 0
-    attack: 0
+  Effects:
+  - maxhp: 0
+    jumppower: 0
+    speed: 0
+  - maxhp: 0
+    jumppower: 0
+    speed: 0
+  - maxhp: 0
     jumppower: 0
     speed: 0
