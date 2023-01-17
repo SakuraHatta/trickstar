@@ -340,6 +340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemsBoxS: {fileID: 126840754}
+  EquipmentItem: 
   maxhp: 0
   hp: 0
   attack: 0
@@ -2677,7 +2678,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b08eaa14abfafa64cadd67196e07a4d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plrControllerS: {fileID: 93780695}
+  playerS: {fileID: 93780696}
   belongItemS: {fileID: 93780697}
   shopS: {fileID: 1182378481}
 --- !u!114 &1182378481
@@ -3156,19 +3157,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1970395511}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11500000, guid: 0f7ecb69c2ccb544abe253dc4042dc55, type: 3}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 0
+      m_Calls: []
 --- !u!114 &1970395511
 MonoBehaviour:
   m_ObjectHideFlags: 0
