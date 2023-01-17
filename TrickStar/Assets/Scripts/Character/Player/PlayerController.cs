@@ -17,6 +17,8 @@ public class PlayerController : CharacterBase
     //キー入力
     public override void KeyController()
     {
+        if (ACTIVE != (state & ACTIVE)) { return; }
+
         //Aキーを押したとき
         if (Input.GetKey(KeyCode.A))//右に移動
         {

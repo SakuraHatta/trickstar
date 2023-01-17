@@ -28,9 +28,10 @@ public class Player : MonoBehaviour
         playerS.HitWall();
     } 
 
-    void Update()
+    //プレイヤーの基本処理
+    public void UpdatePlayer()
     {
         playerS.KeyController();  //プレイヤーのキー操作処理
-        playerS.AdjustRigid();
+        playerS.AdjustRigid();    //プレイヤーのrigid調整
     }
 }
