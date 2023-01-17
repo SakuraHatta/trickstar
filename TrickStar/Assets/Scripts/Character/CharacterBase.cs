@@ -7,6 +7,7 @@ public class CharacterBase : MonoBehaviour
 {
     [SerializeField]
     protected ItemBox itemsBoxS;  //すべてのアイテムが管理されているスクリプト
+    [SerializeField]
     protected List<int> EquipmentItem = new List<int>();
 
     //パラメーター
@@ -26,6 +27,7 @@ public class CharacterBase : MonoBehaviour
     protected readonly int ALIVE;   //生存フラグ
     protected readonly int JUMP;    //ジャンプフラグ
     protected readonly int ATTACK;  //攻撃フラグ
+    protected readonly int ACTIVE;  //起動フラグ   
 
     public int itemstate;        //アイテムのステータス
 
@@ -36,16 +38,17 @@ public class CharacterBase : MonoBehaviour
 
     public CharacterBase()
     {
-        state = 0b0001;
+        state = 0b1001;
         ALIVE = 0b0001;
         JUMP = 0b0010;
-        ATTACK = 0b0011;
+        ATTACK = 0b0100;
+        ACTIVE = 0b1000;
 
         itemstate = 0b0000;
         INVINCLEBLE = 0b0001;
         DOUBLEJUMP = 0b0010;
-        DIG = 0b0011;
-        CREATE = 0b0100;
+        DIG = 0b0100;
+        CREATE = 0b1000;
     }
 
     //メゾット
@@ -74,4 +77,11 @@ public class CharacterBase : MonoBehaviour
 
     public Vector2 GetRigid() { return rigid; }  //rigidを所得するメゾット
     public virtual void HitWall() {;}            //壁に当たった時の処理
+    public void ChangeActive(bool b)
+    {
+        if (b && ACTIVE != (state & ACTIVE))
+            state |= ACTIVE;
+        else if (ACTIVE == (state & ACTIVE))
+            state &= ~ACTIVE;
+    }
 }

@@ -6,105 +6,134 @@ public class GamePlay : MonoBehaviour
 {
     //ゲーム進行に必要なScriptたち
     [SerializeField]
-    private PlayerController plrControllerS;
+    private Player playerS;
     [SerializeField]
     private BelongItem belongItemS;
     [SerializeField]
     private ShopScript shopS;
 
     //ゲーム進行中のパラメーター
-    private uint gameState = 0b0000;
-    private const uint SHOP = 0b0001;  //買い物中かのフラグ
-    private const uint ITEMS = 0b0010; //インベントリを開いているかのフラグ
-    private const uint PAUSE = 0b0100;    //ポーズ中かのフラグ
+    private uint gameState = 0b0001;
+    private const uint DEFAULT = 0b0001;    //普通の状態
+    private const uint SHOP = 0b0010;  //買い物中かのフラグ
+    private const uint ITEMS = 0b0100; //インベントリを開いているかのフラグ
+    private const uint PAUSE = 0b1000;    //ポーズ中かのフラグ
 
-    private void ShowGameState()
+    private float fixedTimeScale;   //FixedUpdateの時間
+
+    private void ShowGameState() //今のゲームの状況を表示するメゾット 
     {
-        switch (gameState)
-        {
-            case SHOP:
-                Debug.Log("ショップ中です");
-                break;
-            case ITEMS:
-                Debug.Log("インベントリを開いている");
-                break;
-            case PAUSE:
-                Debug.Log("ポーズ中");
-                break;
-            default:
-                break;
-        }
+        Debug.Log(gameState);
     }
 
-    private void KeyEvents()//キーを押したときの処理
+    private bool KeyEvents()//キーを押したときの処理
     {
         if (Input.GetKeyDown(KeyCode.Return))//Enterキーを押したときの処理   
         {
             if (PAUSE != (gameState & PAUSE))
             {
                 gameState |= PAUSE;
-                Debug.Log("ポーズ画面");
+                Time.timeScale = 0.0f;
             }
             else
             {
                 gameState &= ~PAUSE;
-                Debug.Log("ポーズ解除");
+                Time.timeScale = 1.0f;
+                Time.fixedDeltaTime = fixedTimeScale * Time.timeScale;
             }
+
+            return true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))//スペースキーを押した時の処理
         {
-            if (PAUSE == (gameState & PAUSE)) { return; }
+            if (PAUSE == (gameState & PAUSE)) { return false; }
 
             if (SHOP != (gameState & SHOP))
             {
                 gameState |= SHOP;
                 EnterShop();
             }
-            else
+
+            return true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.E)) //Eを押したときの処理
+        {
+            if (PAUSE == (gameState & PAUSE) || SHOP == (gameState & SHOP)) { return false; }
+
+            if (ITEMS != (gameState & ITEMS))
+            {
+                gameState |= ITEMS;
+                belongItemS.OpenItems();
+            }
+
+            return true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Backspace)) //バックスペースを押したとき
+        {
+            if (SHOP == (gameState & SHOP))     //SHOP中ならSHOP状態を解除
             {
                 gameState &= ~SHOP;
                 ExitShop();
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (PAUSE == (gameState & PAUSE)) { return; }
-
-            if (ITEMS != (gameState & ITEMS))
-                gameState |= ITEMS;
-            else
+            if (ITEMS == (gameState & ITEMS))  //アイテム欄を開いていたらアイテム欄を閉じる
+            {
                 gameState &= ~ITEMS;
+                belongItemS.CloseItems();
+            }
+            return true;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))//ESCキーを押したときの処理   
         {
             Application.Quit(); //ゲームを終わる
             Debug.Log("ゲーム終了");
+            return true;
         }
 
-        ShowGameState();
+        return false;
     }
 
     private void EnterShop()//ショップに入った時の処理
     {
         shopS.OpenShop();
     }
-    private void ExitShop()
+    private void ExitShop()//ショップから出たときの処理
     {
         shopS.ExitShop();
     }
 
+    void Start()
+    {
+        this.fixedTimeScale = Time.fixedDeltaTime;
+        belongItemS.StartBelongItem();
+    }
+
     void Update()   //主なゲームループ
     {
-        KeyEvents();
+        if (KeyEvents())
+        {
+            //もしいずれかの操作キーを押したとき
+            ShowGameState();
+        }
 
-        if (SHOP == (gameState & SHOP) && PAUSE != (gameState & PAUSE))
+        if (PAUSE == (gameState & PAUSE)) { return; }
+
+        //通常場面とアイテム場面ならプレイヤーを操作できるようにする
+        if (SHOP != (gameState & SHOP))
+        {
+            playerS.UpdatePlayer();
+        }
+
+        //ショップ場面の場合
+        if (SHOP == (gameState & SHOP))
         {
             shopS.UpdateShop();
         }
-        else if (ITEMS == (gameState & ITEMS) && PAUSE != (gameState & PAUSE))
+        //アイテム画面の場合
+        else if (ITEMS == (gameState & ITEMS))
         {
             belongItemS.UpdateBelongItem();
         }

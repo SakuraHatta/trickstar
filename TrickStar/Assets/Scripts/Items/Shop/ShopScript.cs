@@ -79,11 +79,14 @@ public class ShopScript : MonoBehaviour
 
     public void OpenShop()//店を開くメゾット
     {
+        int id = 0;
         Mselected = 0;
         cardSList[Mselected].ChooseCard();
+
         foreach (ItemCard cardS in cardSList)   //cardSListの要素数だけ繰り返す
         {
-            cardS.DrawCard(ItemLD.ItemDataList[0]); //カードにデータリストの情報を書かせる
+            cardS.DrawCard(ItemLD.ItemDataList[id]); //カードにデータリストの情報を書かせる
+            id++;
         }
     }
     public void ExitShop()//店を閉めるメゾット
