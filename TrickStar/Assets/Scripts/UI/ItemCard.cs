@@ -28,7 +28,7 @@ public class ItemCard : MonoBehaviour
     {
         cardImage.sprite = image;
     }
-
+    //カードを表示するときのメゾット
     public void DrawCard(ItemData data)
     {
         SetTexts(CardTextsE.nameE, data.name);
@@ -36,17 +36,19 @@ public class ItemCard : MonoBehaviour
         SetTexts(CardTextsE.infoE, data.info);
         SetImage(data.image);
         rectTransform.anchoredPosition += new Vector2(0.0f, 200.0f);
-    }   //カードを表示するときのメゾット
+    }   
+    //カードを非表示にするときのメゾット
     public void HideCard()
     {
         rectTransform.anchoredPosition += new Vector2(0.0f, -200.0f);
-    }                //カードを非表示にするときのメゾット
-
-    public void ChooseCard()    //カードが選択されているときの処理
+    }                
+    //カードが選択されているときの処理
+    public void ChooseCard()    
     {
         rectTransform.anchoredPosition += chooseOffset;
     }
-    public void UnChooseCard()  //カードが選択から解除されたときの処理
+    //カードが選択から解除されたときの処理
+    public void UnChooseCard()  
     {
         rectTransform.anchoredPosition -= chooseOffset;
     }

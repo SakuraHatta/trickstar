@@ -10,18 +10,15 @@ public class BelongItem : MonoBehaviour
     [SerializeField]
     private PlayerController playerCS;
 
+    [Header("Data")]
     [SerializeField]
     private ItemListData ItemLD;
-
-    private readonly int MAX_ITEMS; //持てるアイテムの数
-    private int Mitems;              //持っているアイテム数
 
     private int Mselected;          //選択中のitem
     private bool Mdelete;           //削除モードのフラグ
 
     public BelongItem()
     {
-        MAX_ITEMS = 3 - 1;  //持てるアイテムの最大数を決める
         Mselected = 0;
         Mdelete = false;
     }
@@ -51,10 +48,10 @@ public class BelongItem : MonoBehaviour
 
         Mselected += v;
 
-        if (Mselected > MAX_ITEMS)
+        if (Mselected > Const.MAX_ITEMS - 1)
             Mselected = 0;
         else if (Mselected < 0)
-            Mselected = MAX_ITEMS;
+            Mselected = Const.MAX_ITEMS - 1;
 
         belongItemPanelS[Mselected].Choose();
 
@@ -63,7 +60,7 @@ public class BelongItem : MonoBehaviour
 
     public void StartBelongItem()   //最初にする処理
     {
-        for (int i = 0; i <= MAX_ITEMS; i++)  //アイテムパネルの数だけ繰り返す
+        for (int i = 0; i <= Const.MAX_ITEMS - 1; i++)  //アイテムパネルの数だけ繰り返す
         {
             belongItemPanelS[i].StartPanel();
         }
@@ -79,10 +76,10 @@ public class BelongItem : MonoBehaviour
         }
     }   
 
-    public void UseItem()
+    public void UseItem()   //選択してるアイテムを使用する
     {
         playerCS.UseItem(Mselected);
-    }   //選択してるアイテムを使用する
+    }   
 
     public void OpenItems() //アイテム欄を開くメゾット
     {
@@ -92,7 +89,7 @@ public class BelongItem : MonoBehaviour
     }
     public void CloseItems() //アイテム欄を閉じるメゾット
     {
-        for(int i = 0; i < MAX_ITEMS; i++)
+        for(int i = 0; i < Const.MAX_ITEMS; i++)
         {
             belongItemPanelS[i].UnChoose();
         }

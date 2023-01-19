@@ -7,27 +7,32 @@ public class ShopScript : MonoBehaviour
     //Referense
     [Header("Scripts")]
     [SerializeField]
-    private BelongItem belongItemS;
+    private BelongItem belongItemS; //belongitemのScript
     [SerializeField]
-    private PlayerController playerCS;
+    private PlayerController playerCS;  //PlayerControllerのScript
+
+    [Space(10)]
+    [Header("Lists")]
+    [SerializeField]
+    private List<ItemCard> cardSList = new List<ItemCard>();    //アイテムカードのリスト
+    [SerializeField]
+    private List<ShopObjectScript> ShopObjectList = new List<ShopObjectScript>();   //ショップオブジェクトのリスト
+
+    private int[] SellItemID = new int[Const.CARD_NUMBER];
 
     [Space(10)]
     [Header("Data")]
     [SerializeField]
-    private List<ItemCard> cardSList = new List<ItemCard>();
-    [SerializeField]
-    private ItemListData ItemLD;
+    private ItemListData ItemLD;    //ItemListDataのDataList
 
-    private readonly int CARD_NUMBER;  //ショップのカードの数
     private int Mselected;  //選択中のカードのindex
 
     public ShopScript() //ShopScriptのコンストラクタ
     {
-        CARD_NUMBER = 3 - 1;
         Mselected = 0;
     }   
 
-    //private void Test1(int index)    //引数のアイテムのステータスを表示する
+    /*private void Test1(int index)    //引数のアイテムのステータスを表示する
     //{
     //    Debug.Log("アイテムID[" + ItemLD.ItemDataList[index].id + "]の名前は["
     //        + ItemLD.ItemDataList[index].name + "]です。"
@@ -35,30 +40,35 @@ public class ShopScript : MonoBehaviour
 
     //    Debug.Log("値段は[" + ItemLD.ItemDataList[index].price + "]です。");
     //    Debug.Log("説明文 : " + ItemLD.ItemDataList[index].info);
-    //}
+    }*/
 
-    private void BuyItem()  //アイテムを買う処理
+    //アイテムを買う処理
+    private void BuyItem()  
     {
-        playerCS.AddItem(0);
+        playerCS.AddItem(SellItemID[Mselected]);
+        #if CHECK
+                Debug.Log(ItemLD.ItemDataList[SellItemID[Mselected]].name + "を購入した");
+        #endif
     }
-
-    private void ChangeSelect(int change) //Mselectedを引数の値だけずらす処理
+    //Mselectedを引数の値だけずらす処理
+    private void ChangeSelect(int change) 
     {
         cardSList[Mselected].UnChooseCard();    //既に選択されているカード元に戻す
 
         Mselected += change;
-        if (Mselected > CARD_NUMBER)   //Mselectedがカードの枚数を超えてるとき
+        if (Mselected > Const.CARD_NUMBER - 1)   //Mselectedがカードの枚数を超えてるとき
         {
             Mselected = 0;  //選択カードを0にする
         }
         else if (Mselected < 0) //Eselectedが0より下の時
         {
-            Mselected = CARD_NUMBER;   //Eselectedを最大値にする;
+            Mselected = Const.CARD_NUMBER - 1;   //Eselectedを最大値にする;
         }
 
         cardSList[Mselected].ChooseCard();  //新しく選択されたカードを動かす
     }
-    private void KeyController()   //カードを選ぶ処理
+    //カードを選ぶ処理
+    private void KeyController()   
     {
         //左に選択を移動するとき
         if (Input.GetKeyDown(KeyCode.A))
@@ -77,19 +87,56 @@ public class ShopScript : MonoBehaviour
         }
     }
 
-    public void OpenShop()//店を開くメゾット
+    //最初の処理
+    public void StartShop()
     {
-        int id = 0;
+        //マップにあるショップの数だけ繰り返す
+        foreach(ShopObjectScript shop in ShopObjectList)
+        {
+            shop.StartShopObject(); //shopObjectの最初の処理を実行する
+        }
+    }
+
+    //近くに店があるか
+    public bool CheckNearShop()
+    {
+        foreach(ShopObjectScript shop in ShopObjectList)
+        {
+            if (shop.CheckDistance(playerCS.GetPosition()))
+            {
+                SetSellItemID(shop);
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+    //売るアイテムのIDを変更する
+    public void SetSellItemID(ShopObjectScript shopObj)
+    {
+        int index = 0;
+        foreach(int sellId in shopObj.GetIDArray())
+        {
+            SellItemID[index] = sellId;
+            index++;
+        }
+    }
+    //店を開くメゾット
+    public void OpenShop()
+    {
+        int index = 0;
         Mselected = 0;
         cardSList[Mselected].ChooseCard();
 
         foreach (ItemCard cardS in cardSList)   //cardSListの要素数だけ繰り返す
         {
-            cardS.DrawCard(ItemLD.ItemDataList[id]); //カードにデータリストの情報を書かせる
-            id++;
+            cardS.DrawCard(ItemLD.ItemDataList[SellItemID[index]]); //カードにデータリストの情報を書かせる
+            index++;
         }
+
     }
-    public void ExitShop()//店を閉めるメゾット
+    //店を閉めるメゾット
+    public void ExitShop()
     {
         cardSList[Mselected].UnChooseCard();
         foreach (ItemCard cardS in cardSList)   //cardSListの要素数だけ繰り返す
@@ -97,8 +144,8 @@ public class ShopScript : MonoBehaviour
             cardS.HideCard(); //カードを隠す
         }
     }
-
-    public void UpdateShop()//ショップ中なら処理をする関数
+    //ショップ中なら処理をする関数
+    public void UpdateShop()
     {
         KeyController();
     }

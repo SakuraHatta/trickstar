@@ -13,8 +13,10 @@ public class ItemBaseScript : MonoBehaviour
         Mactive = false;
     }
 
-    public virtual void SetActive(CharacterBase Char) {;}    //アイテムの効果を発動させるメゾット
-    public virtual void SetPassive(CharacterBase Char) {;}   //アイテムの効果を消すメゾット
+    public virtual void UseItem(CharacterBase Char) {; }    //引数のキャラクターにアイテムの効果を発動させるメゾット
+
+    public virtual void SetActive(CharacterBase Char) {; }    //引数のキャラクターにアイテムの効果を発動させるメゾット
+    public virtual void SetPassive(CharacterBase Char) {;}   //引数のキャラクターのアイテムの効果を消すメゾット
 
     public bool CheckActive() { return Mactive; }   //アイテムが起動してるか確認するメゾット
 }
