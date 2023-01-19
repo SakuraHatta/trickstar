@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class CreatePen : ItemBaseScript
 {
-    public override void SetActive(CharacterBase Char)
+    public override void UseItem(CharacterBase Char)
     {
-        Mactive = true;
-        Char.itemstate |= Char.CREATE;
+        if (!Mactive)
+        {
+            Char.itemstate |= Const.CREATE;
+        }
+        else
+        {
+            Char.itemstate &= ~Const.CREATE;
+        }
+
+        Mactive = !Mactive;
     }
     public override void SetPassive(CharacterBase Char)
     {
         Mactive = false;
-        Char.itemstate &= ~Char.CREATE;
+        Char.itemstate &= ~Const.CREATE;
     }
 }

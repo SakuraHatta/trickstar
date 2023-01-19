@@ -6,12 +6,20 @@ public class Eraser : ItemBaseScript
 {
     public override void SetActive(CharacterBase Char)
     {
-        Mactive = true;
-        Char.itemstate |= Char.DIG;
+        if (!Mactive)
+        {
+            Char.itemstate |= Const.DIG;
+        }
+        else
+        {
+            Char.itemstate &= ~Const.DIG;
+        }
+
+        Mactive = !Mactive;
     }
     public override void SetPassive(CharacterBase Char)
     {
         Mactive = false;
-        Char.itemstate &= ~Char.DIG;
+        Char.itemstate &= ~Const.DIG;
     }
 }

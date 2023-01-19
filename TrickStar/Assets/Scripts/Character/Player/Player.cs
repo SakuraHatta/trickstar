@@ -24,7 +24,6 @@ public class Player : MonoBehaviour
     //‰½‚©‚É‚Ô‚Â‚©‚Á‚½Žž
     private void OnCollisionEnter2D(Collision2D hit)
     {
-        Debug.Log(hit.gameObject.transform.position);
         playerS.HitWall();
     } 
 
