@@ -4,19 +4,17 @@ using UnityEngine;
 
 public class ItemBaseScript : MonoBehaviour
 {
-    protected int MitemID;   //アイテムのID(ItemDataListのIndexのこと)
+    protected uint MitemType;    //アイテムの種類
 
-    protected bool Mactive;    //アイテムを動かしているかのフラグ
+    ////アイテム使用中なら常に処理するメゾット
+    //public virtual void UpdateItem() {; }
+    //引数のキャラクターにアイテムの効果を発動させるメゾット
+    public virtual void ActiveItem(CharacterBase Char) {; }
+    //引数のキャラクターのアイテムの効果を消すメゾット
+    public virtual void StopItem(CharacterBase Char) {;}   
 
-    public ItemBaseScript()
-    {
-        Mactive = false;
-    }
+    //アイテムを使った後、耐久地を減らすメゾット
+    public virtual void Decrease() {; }
 
-    public virtual void UseItem(CharacterBase Char) {; }    //引数のキャラクターにアイテムの効果を発動させるメゾット
-
-    public virtual void SetActive(CharacterBase Char) {; }    //引数のキャラクターにアイテムの効果を発動させるメゾット
-    public virtual void SetPassive(CharacterBase Char) {;}   //引数のキャラクターのアイテムの効果を消すメゾット
-
-    public bool CheckActive() { return Mactive; }   //アイテムが起動してるか確認するメゾット
+    public uint GetItemType() { return MitemType; } //アイテムのタイプを所得するメゾット
 }

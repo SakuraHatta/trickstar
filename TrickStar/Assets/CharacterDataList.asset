@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfd960ae427d6744794ffb2e8e33d5f9, type: 3}
   m_Name: CharacterDataList
   m_EditorClassIdentifier: 
-  CharacterDataList:
+  characterDataList:
   - name: Player
     maxhp: 1
-    attack: 0
+    power: 0
     jumppower: 10
     speed: 5
   - name: Nomal
     maxhp: 0
-    attack: 0
+    power: 0
     jumppower: 0
     speed: 0

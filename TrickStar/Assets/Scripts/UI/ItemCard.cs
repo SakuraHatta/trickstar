@@ -31,10 +31,10 @@ public class ItemCard : MonoBehaviour
     //カードを表示するときのメゾット
     public void DrawCard(ItemData data)
     {
-        SetTexts(CardTextsE.nameE, data.name);
-        SetTexts(CardTextsE.priceE, data.price);
-        SetTexts(CardTextsE.infoE, data.info);
-        SetImage(data.image);
+        SetTexts(CardTextsE.nameE, data.Name);
+        SetTexts(CardTextsE.priceE, data.Price);
+        SetTexts(CardTextsE.infoE, data.Info);
+        SetImage(data.Image);
         rectTransform.anchoredPosition += new Vector2(0.0f, 200.0f);
     }   
     //カードを非表示にするときのメゾット

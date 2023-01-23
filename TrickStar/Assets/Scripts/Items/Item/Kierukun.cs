@@ -4,21 +4,16 @@ using UnityEngine;
 
 public class Kierukun : ItemBaseScript
 {
-    public override void SetActive(CharacterBase Char) { 
-        if (!Mactive)
-        {
-            Char.itemstate |= Const.INVINCLEBLE;
-        }
-        else
-        {
-            Char.itemstate &= ~Const.INVINCLEBLE;
-        }
-
-        Mactive = !Mactive;
+    public Kierukun()
+    {
+        MitemType = 0b0001;
     }
 
-    public override void SetPassive(CharacterBase Char) { 
-        Mactive = false;
-        Char.itemstate &= ~Const.INVINCLEBLE;
+    public override void ActiveItem(CharacterBase Char) { 
+        Char.Itemstate |= Const.INVINCLEBLE;
+    }
+
+    public override void StopItem(CharacterBase Char) { 
+        Char.Itemstate &= ~Const.INVINCLEBLE;
     }
 }

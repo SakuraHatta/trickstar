@@ -5,6 +5,9 @@ using UnityEngine;
 //継承クラス(継承元 : CharacterBase)
 public class PlayerController : CharacterBase
 {
+    [SerializeField]
+    private BelongItem belongItemsS;    //プレイヤーの持ち物を管理するScript(Playerから)
+
     [Space(10)]
     [Header("Physics")]
     [SerializeField]
@@ -12,11 +15,14 @@ public class PlayerController : CharacterBase
     [SerializeField]
     private Rigidbody2D rigidC;  //RigidBody2Dのコンポーネント
 
+
+
     private int money;  //所持金
 
     //キー入力
     public override void KeyController()
     {
+        //起動中じゃないなら処理を中断する
         if (Const.ACTIVE != (state & Const.ACTIVE)) { return; }
 
         //Aキーを押したとき
@@ -32,14 +38,55 @@ public class PlayerController : CharacterBase
         //スペースキーを押したとき
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (Const.JUMP != (state & Const.JUMP))    //プレイヤーがジャンプ状態じゃないとき
+            //プレイヤーがジャンプ状態じゃないとき
+            if (Const.JUMP != (state & Const.JUMP))    
             {
                 state |= Const.JUMP;
                 Jump();
             }
-            else if (Const.DOUBLEJUMP == (state & Const.DOUBLEJUMP))
+            //空中でダブルジャンプができるとき
+            else if (Const.JUMP == (state & Const.JUMP) && Const.DOUBLEJUMP == (itemstate & Const.DOUBLEJUMP))    
             {
-                Jump();
+                if (airjump < limitairjump)
+                SkyJump();
+                airjump++;
+            }
+        }
+
+        //左クリックを押したとき
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (Const.DIG == (itemstate & Const.DIG))
+            {
+                if (tilemapS.DeleteTile())
+                {
+                    itemsBoxS.DecreaseCreate(this);
+                    belongItemsS.ChangeColor();
+#if CHECK
+                        Debug.Log("タイルを破壊");
+#endif          
+                    return;
+                }
+#if CHECK
+                    Debug.Log("削除失敗…");
+#endif
+            }
+
+            else if (Const.CREATE == (itemstate & Const.CREATE))
+            {
+
+                if (tilemapS.CreateTile())
+                {
+                    itemsBoxS.DecreaseCreate(this);
+                    belongItemsS.ChangeColor();
+#if CHECK
+                        Debug.Log("タイルを生成");
+#endif
+                    return;
+                }
+                #if CHECK
+                    Debug.Log("生成失敗…");
+                #endif
             }
         }
     }
@@ -55,11 +102,27 @@ public class PlayerController : CharacterBase
         Vector2 jump = new Vector2(0.0f, jumppower);
         rigidC.AddForce(jump, ForceMode2D.Impulse);
     }
+    //ダブルジャンプ
+    public override void SkyJump()
+    {
+        rigid.y = 0.0f;
+        Jump();
+    }
     //地面に触った時
     public override void HitWall()
     {
         state &= ~Const.JUMP;
         rigid.y = 0.0f;
+        
+        if (Const.DOUBLEJUMP == (itemstate & Const.DOUBLEJUMP))
+        {
+            airjump = 0;
+        }
+    }
+    //マウスの位置にタイルを表示させる処理
+    public void SelectTile()
+    {
+        tilemapS.ShowSelectTile(itemstate);
     }
 
     //生きているか確認する
@@ -67,34 +130,37 @@ public class PlayerController : CharacterBase
         if (Const.ALIVE == (state & Const.ALIVE)) { return true; }  //生きていたらtrueを返す
         return false;   //生きてなかったらfalseを返す
     }
+
     //所持金を所得する
     public int GetMoney() { return money; }
 
-    //持っているアイテムのidを確認するメゾット
-    public List<int> GetItems(){ return EquipmentItem; }
-
-    //アイテムを追加するメゾット
-    public void AddItem(int id)
-    {
-        Mitems++;
-        EquipmentItem.Add(id);
-    }
     //アイテムを使用するメゾット
     public void UseItem(int equipIndex)
     {
         //もしインデントリでまだ持ってないアイテムを使おうとしたとき
-        if (equipIndex > Mitems - 1) {
+        if (EquipmentItem[equipIndex].MItemID == Const.NO_ITEM) {
             //処理を中断する
-#if CHECK
-            Debug.Log("indexが" + equipIndex + "のアイテムはまだ何も持っていない!");
-#endif
+            #if CHECK
+                Debug.Log("indexが" + equipIndex + "のアイテムはまだ何も持っていない!");
+            #endif
             return;
-        }    
-        itemsBoxS.ActiveItems(this ,EquipmentItem[equipIndex]);
-#if CHECK
-        Debug.Log("indexが" + equipIndex + "のIDが" + EquipmentItem[equipIndex] + "アイテムを使った");
-#endif
+        }
+        else if (EquipmentItem[equipIndex].MEndurance == 0)
+        {
+            //処理を中断する
+            #if CHECK
+                Debug.Log("indexが" + equipIndex + "のアイテムはもう使えない!");
+            #endif
+            return;
+        }
+
+        itemsBoxS.UseItems(this ,EquipmentItem[equipIndex]);
+        EquipmentItem[equipIndex].MActive = !(EquipmentItem[equipIndex].MActive);
+        #if CHECK
+        Debug.Log("indexが" + equipIndex + "のIDが" + EquipmentItem[equipIndex].MItemID + "アイテムを使った");
+        #endif
     }
+
     //rigidを調整する関数
     public void AdjustRigid()
     {

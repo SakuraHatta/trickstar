@@ -17,45 +17,52 @@ public class BelongItem : MonoBehaviour
     private int Mselected;          //選択中のitem
     private bool Mdelete;           //削除モードのフラグ
 
+    //色関連
+    private readonly Color NormalC = new Color(1.0f, 1.0f, 1.0f, 1.0f);   //通常の色
+    private readonly Color UseC = new Color(0.0f, 1.0f, 0.0f, 1.0f);      //使用中の色
+    private readonly Color CantUseC = new Color(1.0f, 0.0f, 0.0f, 1.0f);  //使用できない時の色
+    private readonly Color NoneC = new Color(1.0f, 1.0f, 1.0f, 0.0f);     //何も持ってない時の色
+
     public BelongItem()
     {
-        Mselected = 0;
         Mdelete = false;
     }
 
     private void KeyController()//キー操作のメゾット
     {
-        //左に選択を移動するとき
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            MoveSelect(-1);
-        }
-        //右に選択を移動するとき
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            MoveSelect(1);
-        }
-        //選択するとき
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
+            MoveSelect(0);
             UseItem();
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            MoveSelect(1);
+            UseItem();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            MoveSelect(2);
+            UseItem();
+        }
+
+        //選択するとき
+        //if (Input.GetKeyDown(KeyCode.Return))
+        //{
+        //    UseItem();
+        //}
     }   
 
     private void MoveSelect(int v)  //選択を引数分動かすメゾット
     {
-        belongItemPanelS[Mselected].UnChoose();
+        Mselected = v;
+    }   
 
-        Mselected += v;
+    private void UseItem()   //選択してるアイテムを使用する
+    {
+        playerCS.UseItem(Mselected);
 
-        if (Mselected > Const.MAX_ITEMS - 1)
-            Mselected = 0;
-        else if (Mselected < 0)
-            Mselected = Const.MAX_ITEMS - 1;
-
-        belongItemPanelS[Mselected].Choose();
-
-        Debug.Log("選択アイテム : " + Mselected);
+        ChangeColor();
     }   
 
     public void StartBelongItem()   //最初にする処理
@@ -63,35 +70,77 @@ public class BelongItem : MonoBehaviour
         for (int i = 0; i <= Const.MAX_ITEMS - 1; i++)  //アイテムパネルの数だけ繰り返す
         {
             belongItemPanelS[i].StartPanel();
+            belongItemPanelS[i].ChangeColor(NoneC);
         }
     }
 
-    public void DrawImages()//インベントリのアイテムのイメージを描くメゾット
+    //インベントリのアイテムのイメージを描くメゾット
+    public void DrawImages()
     {
         int index = 0;
-        foreach(int id in playerCS.GetItems())
+        foreach(BelongItemData bData in playerCS.GetItems())
         {
-            belongItemPanelS[index].ChangeImage(ItemLD.ItemDataList[id].image);
+            //もし何もアイテムがないなら処理を中断する
+            if (bData.MItemID == Const.NO_ITEM) { 
+                continue;
+                index++;
+            }
+
+            belongItemPanelS[index].ChangeImage(ItemLD.ItemDataList[bData.MItemID].Image);
+            belongItemPanelS[index].ChangeEndurance(bData.MEndurance);
             index++;
         }
     }   
-
-    public void UseItem()   //選択してるアイテムを使用する
+    //インベントリのアイテムの色と大きさを変えるメゾット
+    public void ChangeColor()
     {
-        playerCS.UseItem(Mselected);
-    }   
+        int index = 0;  //ループ回数
+        foreach (BelongItemData bData in playerCS.GetItems())
+        {
+            //アイテムを持っていないとき
+            if (bData.MItemID == Const.NO_ITEM)
+            {
+                belongItemPanelS[index].ChangeColor(NoneC);
+                index++;
+                continue;
+            }
+            //アイテムの耐久地がないとき
+            else if ((bData.MEndurance == 0))
+            {
+                belongItemPanelS[index].ChangeColor(CantUseC);
+                belongItemPanelS[index].UnChoose();
+                belongItemPanelS[index].ChangeEndurance(bData.MEndurance);
+                index++;
+                continue;
+            }
+            
+            //使用中の時
+            if (bData.MActive)
+            {
+                belongItemPanelS[index].ChangeColor(UseC);
+                belongItemPanelS[index].Choose();
+                belongItemPanelS[index].ChangeEndurance(bData.MEndurance);
+            }
+            //使用中じゃないとき
+            else
+            {
+                belongItemPanelS[index].ChangeColor(NormalC);
+                belongItemPanelS[index].UnChoose();
+                belongItemPanelS[index].ChangeEndurance(bData.MEndurance);
+            }
+            index++;
+        }
+    }
 
     public void OpenItems() //アイテム欄を開くメゾット
     {
-        Mselected = 0;
-        belongItemPanelS[Mselected].Choose();
         DrawImages();
     }
     public void CloseItems() //アイテム欄を閉じるメゾット
     {
         for(int i = 0; i < Const.MAX_ITEMS; i++)
         {
-            belongItemPanelS[i].UnChoose();
+            //belongItemPanelS[i].UnChoose();
         }
     }
 

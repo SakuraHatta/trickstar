@@ -14,23 +14,26 @@ public class Player : MonoBehaviour
     [Space(10)]
     [Header("Scripts")]
     [SerializeField]
-    private PlayerController playerS;   //PlayerControllerのScript
+    private PlayerController playerCS;   //PlayerControllerのScript
 
     void Start()
     {
-        playerS.SetParameta(CListData.CharacterDataList[CharacterId]);
+        playerCS.SetParameta(CListData.CharacterDataList[CharacterId]);
     }
 
     //何かにぶつかった時
     private void OnCollisionEnter2D(Collision2D hit)
     {
-        playerS.HitWall();
+        playerCS.HitWall();
     } 
 
     //プレイヤーの基本処理
-    public void UpdatePlayer()
+    public void Update()
     {
-        playerS.KeyController();  //プレイヤーのキー操作処理
-        playerS.AdjustRigid();    //プレイヤーのrigid調整
+        if (!playerCS.GetActive()) { return; }
+
+        playerCS.KeyController();  //プレイヤーのキー操作処理
+        playerCS.AdjustRigid();    //プレイヤーのrigid調整
+        playerCS.SelectTile();
     }
 }

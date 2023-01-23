@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d35ce1ae3c696b14d85d98333058ecd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SetItem: 3
+  SetItem: 1
 --- !u!212 &60766877
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -438,14 +438,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemsBoxS: {fileID: 126840754}
-  EquipmentItem: 
-  maxhp: 0
-  hp: 0
-  attack: 0
-  jumppower: 0
-  speed: 0
-  airjump: 0
-  itemstate: 0
+  tilemapS: {fileID: 1182378482}
+  belongItemsS: {fileID: 93780697}
   colliderC: {fileID: 93780692}
   rigidC: {fileID: 93780691}
 --- !u!114 &93780696
@@ -462,7 +456,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterId: 0
   CListData: {fileID: 11400000, guid: daa9ed96b8e422b4a8c27efcacc90b8f, type: 2}
-  playerS: {fileID: 93780695}
+  playerCS: {fileID: 93780695}
 --- !u!114 &93780697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -930,6 +924,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 345205453}
     m_Modifications:
+    - target: {fileID: 2431963954974689780, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
+      propertyPath: m_Name
+      value: ItemImage1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2952010140364618647, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
+      propertyPath: m_Name
+      value: ItemImage2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996635554814531352, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996635554814531352, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7597774341598786191, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
+      propertyPath: m_Name
+      value: ItemImage3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8171646090965740777, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
+      propertyPath: enduranceT
+      value: 
+      objectReference: {fileID: 982357291}
     - target: {fileID: 8171646091864132174, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
       propertyPath: m_Name
       value: BelongItemPanelPrefab
@@ -1018,6 +1036,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8171646091966853518, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
+      propertyPath: enduranceT
+      value: 
+      objectReference: {fileID: 1046270526}
+    - target: {fileID: 8171646092288714668, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
+      propertyPath: enduranceT
+      value: 
+      objectReference: {fileID: 1268142600}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
 --- !u!1 &519420028
@@ -2764,6 +2790,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cbbf4c32cf8d0f4fa04387a697852dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &982357291 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1627260756422771643, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
+  m_PrefabInstance: {fileID: 516069204}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1046270526 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4947170045604486143, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
+  m_PrefabInstance: {fileID: 516069204}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1182378477
 GameObject:
   m_ObjectHideFlags: 0
@@ -2810,7 +2858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b08eaa14abfafa64cadd67196e07a4d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerS: {fileID: 93780696}
+  playerCS: {fileID: 93780695}
   belongItemS: {fileID: 93780697}
   shopS: {fileID: 1182378481}
 --- !u!114 &1182378481
@@ -2850,7 +2898,8 @@ MonoBehaviour:
   BlockTileMap: {fileID: 573176081}
   UITileMap: {fileID: 778862986}
   GroundTile: {fileID: 11400000, guid: 265d4a8f15edbbf42a4194b6e02b77f9, type: 2}
-  SelectTile: {fileID: 11400000, guid: 7c1bf2ccbdbb4e94fab1e2ec81fc38d2, type: 2}
+  SelectTile: {fileID: 11400000, guid: f654638bc4728cd4da4c33d1b94d7f8c, type: 2}
+  tilemapCollider: {fileID: 0}
 --- !u!1 &1218399531
 GameObject:
   m_ObjectHideFlags: 0
@@ -3094,6 +3143,17 @@ PrefabInstance:
       objectReference: {fileID: 1458924707}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 143f70c6d1b0b514c9b52b53cabc4469, type: 3}
+--- !u!114 &1268142600 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5885614836211090451, guid: 7be16fcb0343e1e43bbc485dfec48e78, type: 3}
+  m_PrefabInstance: {fileID: 516069204}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1283772285
 GameObject:
   m_ObjectHideFlags: 0

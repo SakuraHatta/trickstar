@@ -4,22 +4,18 @@ using UnityEngine;
 
 public class Eraser : ItemBaseScript
 {
-    public override void SetActive(CharacterBase Char)
+    public Eraser()
     {
-        if (!Mactive)
-        {
-            Char.itemstate |= Const.DIG;
-        }
-        else
-        {
-            Char.itemstate &= ~Const.DIG;
-        }
-
-        Mactive = !Mactive;
+        MitemType = 0b0100;
     }
-    public override void SetPassive(CharacterBase Char)
+
+    public override void ActiveItem(CharacterBase Char)
     {
-        Mactive = false;
-        Char.itemstate &= ~Const.DIG;
+        Char.Itemstate |= Const.DIG;
+    }
+
+    public override void StopItem(CharacterBase Char)
+    {
+        Char.Itemstate &= ~Const.DIG;
     }
 }

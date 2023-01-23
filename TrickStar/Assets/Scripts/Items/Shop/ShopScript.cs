@@ -32,22 +32,24 @@ public class ShopScript : MonoBehaviour
         Mselected = 0;
     }   
 
-    /*private void Test1(int index)    //引数のアイテムのステータスを表示する
-    //{
-    //    Debug.Log("アイテムID[" + ItemLD.ItemDataList[index].id + "]の名前は["
-    //        + ItemLD.ItemDataList[index].name + "]です。"
-    //        );
-
-    //    Debug.Log("値段は[" + ItemLD.ItemDataList[index].price + "]です。");
-    //    Debug.Log("説明文 : " + ItemLD.ItemDataList[index].info);
-    }*/
-
     //アイテムを買う処理
     private void BuyItem()  
     {
-        playerCS.AddItem(SellItemID[Mselected]);
+        //これ以上アイテムが持てないときは処理を中断する
+        //(第一引数 : アイテムID, 第二引数 : アイテムの耐久地)
+        if (!(playerCS.AddItem(SellItemID[Mselected],
+            ItemLD.ItemDataList[SellItemID[Mselected]].Endurance))) {
         #if CHECK
-                Debug.Log(ItemLD.ItemDataList[SellItemID[Mselected]].name + "を購入した");
+            Debug.Log("これ以上アイテムは持てない!");
+        #endif 
+            return;
+        }
+
+        belongItemS.OpenItems();    //アイテムのイメージを更新する
+        belongItemS.ChangeColor();  //アイテム欄の色を変える
+
+        #if CHECK
+                Debug.Log(ItemLD.ItemDataList[SellItemID[Mselected]].Name + "を購入した");
         #endif
     }
     //Mselectedを引数の値だけずらす処理
@@ -106,7 +108,6 @@ public class ShopScript : MonoBehaviour
             {
                 SetSellItemID(shop);
                 return true;
-                break;
             }
         }
         return false;

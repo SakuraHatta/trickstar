@@ -9,19 +9,16 @@ public class BlueSpring : ItemBaseScript
     public BlueSpring()
     {
         MaddJump = 10.0f;
+        MitemType = 0b0001;
     }
 
-    public override void UseItem(CharacterBase Char)
+    public override void ActiveItem(CharacterBase Char)
     {
-        if (!Mactive)
-        {
-            Char.jumppower += MaddJump;
-        }
-        else
-        {
-            Char.jumppower += -MaddJump;
-        }
+            Char.Jumppower += MaddJump;
+    }
 
-        Mactive = !Mactive;
+    public override void StopItem(CharacterBase Char)
+    {
+            Char.Jumppower -= MaddJump;
     }
 }

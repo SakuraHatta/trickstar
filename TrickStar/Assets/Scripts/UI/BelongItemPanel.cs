@@ -9,6 +9,9 @@ public class BelongItemPanel : MonoBehaviour
     [SerializeField]
     private Image itemImage;    //アイテムのイメージ画像
 
+    [SerializeField]
+    private Text enduranceT;    //耐久値のテキスト
+
     private RectTransform thisTransform;    //このオブジェクトの位置
 
     private Vector2 selectScale;            //選択中のサイズ
@@ -33,5 +36,16 @@ public class BelongItemPanel : MonoBehaviour
     public void ChangeImage(Sprite image)//パネルのアイテムイメージを変更するメゾット
     {
         itemImage.sprite = image;
-    }   
+    }
+
+    public void ChangeColor(Color color1)
+    {
+        itemImage.color = color1;
+    }
+
+    public void ChangeEndurance(int value)
+    {
+        if (value == Const.NO_ITEM) { return; }
+        enduranceT.text = value.ToString();
+    }
 }

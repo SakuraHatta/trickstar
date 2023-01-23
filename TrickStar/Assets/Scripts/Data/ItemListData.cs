@@ -3,17 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "DataList",menuName = "DataLists/Item")]
+    
 public class ItemListData : ScriptableObject   //アイテムのデータクラスをリスト化したクラス(紛らわしいね)
 {
-    public List<ItemData> ItemDataList = new List<ItemData>(); 
+    [SerializeField]
+    private List<ItemData> itemDataList = new List<ItemData>();
+
+    public List<ItemData> ItemDataList { get { return itemDataList; } }
 }
 
 [System.Serializable]
 public class ItemData   //アイテムのデータクラス
 {
-    public string name;    //アイテム名
-    public int id;         //アイテムID
-    public int price;      //アイテムの値段
-    public Sprite image;   //アイテムの画像
-    public string info;    //アイテムの説明文
+    [SerializeField]
+    private string name;    //アイテム名
+    [SerializeField]
+    private int id;         //アイテムID
+    [SerializeField]
+    private int endurance;  //アイテムの耐久力
+    [SerializeField]
+    private int price;      //アイテムの値段
+    [SerializeField]
+    private Sprite image;   //アイテムの画像
+    [SerializeField]
+    private string info;    //アイテムの説明文
+
+    //それぞれのメンバー変数のゲッター(読み取り専用)
+    public string Name { get { return name; } }
+    public int ID { get { return id; } }
+    public int Endurance { get { return endurance; } }
+    public int Price { get { return price; } }
+    public Sprite Image { get { return image; } }
+    public string Info { get { return info; } }
 }

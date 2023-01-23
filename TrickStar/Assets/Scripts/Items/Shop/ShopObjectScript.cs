@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class ShopObjectScript : MonoBehaviour
 {
     [Tooltip("この店で必ず売られているアイテムのID")]
     [SerializeField]
-    private int SetItem;
-
+    private int SetItem;    //この店で必ず売られているアイテムID
     private int[] itemId = new int[Const.CARD_NUMBER];     //この店で売られているアイテムのIDのList
 
     private Vector2 thisPos;    //このショップの位置
@@ -19,12 +19,17 @@ public class ShopObjectScript : MonoBehaviour
     {
         thisPos = this.transform.position;  //ショップの位置を決める
 
-        for (int i = 0; i < Const.CARD_NUMBER; i++)   //カードの数だけ繰り返す
+        while (true)
         {
-            itemId[i] = GetRandomId(Const.TYPE_ITEMS);  //アイテムのIDをランダムに決める
-        }
+            for (int i = 0; i < Const.CARD_NUMBER; i++)   //カードの数だけ繰り返す
+            {
+                itemId[i] = GetRandomId(Const.TYPE_ITEMS);  //アイテムのIDをランダムに決める
+            }
+            //SetItemのアイテムIDがあるかを探す
+            var result = itemId.Any(e => e == SetItem); 
 
-        itemId[GetRandomId(Const.CARD_NUMBER)] = SetItem; //ランダムのカードを必ず売られているアイテムIDをセットする
+            if (result) { break; }  //あったらループを終了/無かったらまたIDを決める
+        }
     }
 
     //playerが店の近くにいるか確認するメゾット

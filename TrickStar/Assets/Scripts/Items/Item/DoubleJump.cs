@@ -4,25 +4,22 @@ using UnityEngine;
 
 public class DoubleJump : ItemBaseScript
 {
-    public override void UseItem(CharacterBase Char)
-    {
-        if (!Mactive)
-        {
-            Char.itemstate |= Const.DOUBLEJUMP;
-            Char.airjump += 1;
-        }
-        else
-        {
-            Char.itemstate &= ~Const.DOUBLEJUMP;
-            Char.airjump -= 1;
-        }
+    private readonly int MaddAirJumpTimes;
 
-        Mactive = !Mactive;
-    }
-    public override void SetPassive(CharacterBase Char) 
+    public DoubleJump()
     {
-        Mactive = false;
-        Char.itemstate &= ~Const.DOUBLEJUMP;
-        Char.airjump -= 1;
+        MitemType = 0b0010;
+        MaddAirJumpTimes = 1;
+    }
+
+    public override void ActiveItem(CharacterBase Char){
+        Char.Itemstate |= Const.DOUBLEJUMP;
+        Char.Limitairjump += MaddAirJumpTimes;
+    }
+
+    public override void StopItem(CharacterBase Char) 
+    {
+        Char.Itemstate &= ~Const.DOUBLEJUMP;
+        Char.Limitairjump -= 1;
     }
 }
