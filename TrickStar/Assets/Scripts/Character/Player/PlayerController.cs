@@ -17,7 +17,7 @@ public class PlayerController : CharacterBase
     //キー入力
     public override void KeyController()
     {
-        if (ACTIVE != (state & ACTIVE)) { return; }
+        if (Const.ACTIVE != (state & Const.ACTIVE)) { return; }
 
         //Aキーを押したとき
         if (Input.GetKey(KeyCode.A))//右に移動
@@ -32,12 +32,12 @@ public class PlayerController : CharacterBase
         //スペースキーを押したとき
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (JUMP != (state & JUMP))    //プレイヤーがジャンプ状態じゃないとき
+            if (Const.JUMP != (state & Const.JUMP))    //プレイヤーがジャンプ状態じゃないとき
             {
-                state |= JUMP;
+                state |= Const.JUMP;
                 Jump();
             }
-            else if (DOUBLEJUMP == (state & DOUBLEJUMP))
+            else if (Const.DOUBLEJUMP == (state & Const.DOUBLEJUMP))
             {
                 Jump();
             }
@@ -58,13 +58,13 @@ public class PlayerController : CharacterBase
     //地面に触った時
     public override void HitWall()
     {
-        state &= ~JUMP;
+        state &= ~Const.JUMP;
         rigid.y = 0.0f;
     }
 
     //生きているか確認する
     public bool CheckAlive() { 
-        if (ALIVE == (state & ALIVE)) { return true; }  //生きていたらtrueを返す
+        if (Const.ALIVE == (state & Const.ALIVE)) { return true; }  //生きていたらtrueを返す
         return false;   //生きてなかったらfalseを返す
     }
     //所持金を所得する
@@ -76,13 +76,24 @@ public class PlayerController : CharacterBase
     //アイテムを追加するメゾット
     public void AddItem(int id)
     {
+        Mitems++;
         EquipmentItem.Add(id);
     }
     //アイテムを使用するメゾット
     public void UseItem(int equipIndex)
     {
+        //もしインデントリでまだ持ってないアイテムを使おうとしたとき
+        if (equipIndex > Mitems - 1) {
+            //処理を中断する
+#if CHECK
+            Debug.Log("indexが" + equipIndex + "のアイテムはまだ何も持っていない!");
+#endif
+            return;
+        }    
         itemsBoxS.ActiveItems(this ,EquipmentItem[equipIndex]);
-        Debug.Log(equipIndex + "のアイテムを使った");
+#if CHECK
+        Debug.Log("indexが" + equipIndex + "のIDが" + EquipmentItem[equipIndex] + "アイテムを使った");
+#endif
     }
     //rigidを調整する関数
     public void AdjustRigid()

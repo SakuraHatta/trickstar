@@ -23,12 +23,13 @@ public class GamePlay : MonoBehaviour
 
     private void ShowGameState() //今のゲームの状況を表示するメゾット 
     {
-        Debug.Log(gameState);
+        Debug.Log("ゲームの状態 : " + gameState);
     }
 
     private bool KeyEvents()//キーを押したときの処理
     {
-        if (Input.GetKeyDown(KeyCode.Return))//Enterキーを押したときの処理   
+        //Enterキーを押したときの処理 
+        if (Input.GetKeyDown(KeyCode.Return))  
         {
             if (PAUSE != (gameState & PAUSE))
             {
@@ -44,21 +45,21 @@ public class GamePlay : MonoBehaviour
 
             return true;
         }
-
-        if (Input.GetKeyDown(KeyCode.Space))//スペースキーを押した時の処理
+        //スペースキーを押した時の処理
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             if (PAUSE == (gameState & PAUSE)) { return false; }
 
-            if (SHOP != (gameState & SHOP))
+            if (SHOP != (gameState & SHOP) && shopS.CheckNearShop())
             {
+                shopS.OpenShop();
                 gameState |= SHOP;
-                EnterShop();
             }
 
             return true;
         }
-
-        if (Input.GetKeyDown(KeyCode.E)) //Eを押したときの処理
+        //Eを押したときの処理
+        if (Input.GetKeyDown(KeyCode.E)) 
         {
             if (PAUSE == (gameState & PAUSE) || SHOP == (gameState & SHOP)) { return false; }
 
@@ -70,13 +71,13 @@ public class GamePlay : MonoBehaviour
 
             return true;
         }
-
-        if (Input.GetKeyDown(KeyCode.Backspace)) //バックスペースを押したとき
+        //バックスペースを押したとき
+        if (Input.GetKeyDown(KeyCode.Backspace)) 
         {
             if (SHOP == (gameState & SHOP))     //SHOP中ならSHOP状態を解除
             {
                 gameState &= ~SHOP;
-                ExitShop();
+                shopS.ExitShop();
             }
             if (ITEMS == (gameState & ITEMS))  //アイテム欄を開いていたらアイテム欄を閉じる
             {
@@ -85,8 +86,8 @@ public class GamePlay : MonoBehaviour
             }
             return true;
         }
-
-        if (Input.GetKeyDown(KeyCode.Escape))//ESCキーを押したときの処理   
+        //ESCキーを押したときの処理 
+        if (Input.GetKeyDown(KeyCode.Escape))  
         {
             Application.Quit(); //ゲームを終わる
             Debug.Log("ゲーム終了");
@@ -96,19 +97,11 @@ public class GamePlay : MonoBehaviour
         return false;
     }
 
-    private void EnterShop()//ショップに入った時の処理
-    {
-        shopS.OpenShop();
-    }
-    private void ExitShop()//ショップから出たときの処理
-    {
-        shopS.ExitShop();
-    }
-
     void Start()
     {
-        this.fixedTimeScale = Time.fixedDeltaTime;
-        belongItemS.StartBelongItem();
+        this.fixedTimeScale = Time.fixedDeltaTime;  //fixedUpdateの時間を保存する
+        shopS.StartShop();  //ショップの初期処理をする
+        belongItemS.StartBelongItem();  //アイテム欄の初期処理をする
     }
 
     void Update()   //主なゲームループ
@@ -116,7 +109,9 @@ public class GamePlay : MonoBehaviour
         if (KeyEvents())
         {
             //もしいずれかの操作キーを押したとき
-            ShowGameState();
+            #if CHECK
+            ShowGameState();    
+            #endif
         }
 
         if (PAUSE == (gameState & PAUSE)) { return; }
@@ -126,7 +121,6 @@ public class GamePlay : MonoBehaviour
         {
             playerS.UpdatePlayer();
         }
-
         //ショップ場面の場合
         if (SHOP == (gameState & SHOP))
         {
