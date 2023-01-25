@@ -100,13 +100,16 @@ public class BelongItem : MonoBehaviour
             //アイテムを持っていないとき
             if (bData.MItemID == Const.NO_ITEM)
             {
+                //透明の色を書く
                 belongItemPanelS[index].ChangeColor(NoneC);
+                belongItemPanelS[index].ChangeEndurance(Const.NO_ITEM);
                 index++;
                 continue;
             }
             //アイテムの耐久地がないとき
             else if ((bData.MEndurance == 0))
             {
+                //赤色にしてアイテムの装備を解除する
                 belongItemPanelS[index].ChangeColor(CantUseC);
                 belongItemPanelS[index].UnChoose();
                 belongItemPanelS[index].ChangeEndurance(bData.MEndurance);
@@ -117,6 +120,7 @@ public class BelongItem : MonoBehaviour
             //使用中の時
             if (bData.MActive)
             {
+                //緑色にして選択中にする
                 belongItemPanelS[index].ChangeColor(UseC);
                 belongItemPanelS[index].Choose();
                 belongItemPanelS[index].ChangeEndurance(bData.MEndurance);
@@ -124,6 +128,7 @@ public class BelongItem : MonoBehaviour
             //使用中じゃないとき
             else
             {
+                //普通の色にする
                 belongItemPanelS[index].ChangeColor(NormalC);
                 belongItemPanelS[index].UnChoose();
                 belongItemPanelS[index].ChangeEndurance(bData.MEndurance);
@@ -140,7 +145,7 @@ public class BelongItem : MonoBehaviour
     {
         for(int i = 0; i < Const.MAX_ITEMS; i++)
         {
-            //belongItemPanelS[i].UnChoose();
+            belongItemPanelS[i].UnChoose();
         }
     }
 

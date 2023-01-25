@@ -17,6 +17,7 @@ public class GamePlay : MonoBehaviour
     private uint gameState = 0b0001;
 
     private float fixedTimeScale;   //FixedUpdateの時間
+    private Vector2 startPos;       //最初のスタート地点の座標
 
     private void ShowGameState() //今のゲームの状況を表示するメゾット 
     {
@@ -104,7 +105,7 @@ public class GamePlay : MonoBehaviour
             return true;
         }
         //バックスペースを押したとき
-        if (Input.GetKeyDown(KeyCode.Backspace)) 
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             BackEvent();
             return true;
@@ -120,15 +121,26 @@ public class GamePlay : MonoBehaviour
         return false;
     }
 
+    //プレイヤーが死亡した時にする処理
+    private void RestartGame()
+    {
+        playerCS.transform.position = startPos;
+        playerCS.Restart();
+        belongItemS.OpenItems();
+        belongItemS.ChangeColor();
+        belongItemS.CloseItems();
+    }
+
     //初期処理
-    void Start()
+    private void Start()
     {
         this.fixedTimeScale = Time.fixedDeltaTime;  //fixedUpdateの時間を保存する
         shopS.StartShop();  //ショップの初期処理をする
         belongItemS.StartBelongItem();  //アイテム欄の初期処理をする
+        startPos = playerCS.transform.position;
     }
     //主なゲームループ
-    void Update()
+    private void Update()
     {
         if (KeyEvents())
         {
@@ -139,6 +151,12 @@ public class GamePlay : MonoBehaviour
         }
 
         if (Const.PAUSE == (gameState & Const.PAUSE)) { return; }
+
+        //プレイヤーが死亡した場合
+        if (!(playerCS.CheckAlive()))
+        {
+            RestartGame();
+        }
 
         //ショップ場面を開いている場合
         if (Const.SHOP == (gameState & Const.SHOP))

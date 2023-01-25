@@ -8,7 +8,7 @@ public class BlueSpring : ItemBaseScript
 
     public BlueSpring()
     {
-        MaddJump = 10.0f;
+        MaddJump = 2.0f;
         MitemType = 0b0001;
     }
 

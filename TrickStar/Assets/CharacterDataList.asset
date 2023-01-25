@@ -16,7 +16,7 @@ MonoBehaviour:
   - name: Player
     maxhp: 1
     power: 0
-    jumppower: 10
+    jumppower: 8
     speed: 5
   - name: Nomal
     maxhp: 0

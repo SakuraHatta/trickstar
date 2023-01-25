@@ -27,6 +27,14 @@ public class Player : MonoBehaviour
         playerCS.HitWall();
     } 
 
+    private void OnTriggerEnter2D(Collider2D hit)
+    {
+        if (hit.gameObject.tag == "Damage")
+        {
+            playerCS.TakeDamage();
+        }
+    }
+
     //プレイヤーの基本処理
     public void Update()
     {
@@ -34,6 +42,7 @@ public class Player : MonoBehaviour
 
         playerCS.KeyController();  //プレイヤーのキー操作処理
         playerCS.AdjustRigid();    //プレイヤーのrigid調整
-        playerCS.SelectTile();
+        playerCS.SelectTile();      //選択中の場所にタイルを表示する関数
+        playerCS.Jump();        //ジャンプ処理
     }
 }

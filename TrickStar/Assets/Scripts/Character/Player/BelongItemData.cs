@@ -8,8 +8,14 @@ public class BelongItemData
     private int Mendurance;   //アイテムの耐久地
     private bool Mactive;   //アイテムを使用しているかのフラグ
 
-
     public BelongItemData()
+    {
+        MitemID = Const.NO_ITEM;
+        Mendurance = Const.NO_ITEM;
+        Mactive = false;
+    }
+
+    public void ResetData()
     {
         MitemID = Const.NO_ITEM;
         Mendurance = Const.NO_ITEM;

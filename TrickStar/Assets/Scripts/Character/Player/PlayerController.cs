@@ -15,9 +15,16 @@ public class PlayerController : CharacterBase
     [SerializeField]
     private Rigidbody2D rigidC;  //RigidBody2Dのコンポーネント
 
-
-
+    private float jumptime;
     private int money;  //所持金
+
+    //ジャンプ時間をリセットする
+    private void Resetjump()
+    {
+        state &= ~Const.JUMPING;
+        jumptime = 0.0f;
+        rigid.y = 0.0f;
+    }
 
     //キー入力
     public override void KeyController()
@@ -42,7 +49,7 @@ public class PlayerController : CharacterBase
             if (Const.JUMP != (state & Const.JUMP))    
             {
                 state |= Const.JUMP;
-                Jump();
+                state |= Const.JUMPING;
             }
             //空中でダブルジャンプができるとき
             else if (Const.JUMP == (state & Const.JUMP) && Const.DOUBLEJUMP == (itemstate & Const.DOUBLEJUMP))    
@@ -51,6 +58,13 @@ public class PlayerController : CharacterBase
                 SkyJump();
                 airjump++;
             }
+        }
+
+        //スペースキーを離したとき
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            if (Const.JUMPING != (state & Const.JUMPING)) { return; }
+            Resetjump();
         }
 
         //左クリックを押したとき
@@ -99,14 +113,25 @@ public class PlayerController : CharacterBase
     //ジャンプ
     public override void Jump()
     {
+        if (Const.JUMPING != (state & Const.JUMPING)) { return; }
+
         Vector2 jump = new Vector2(0.0f, jumppower);
-        rigidC.AddForce(jump, ForceMode2D.Impulse);
+        rigidC.AddForce(jump, ForceMode2D.Force);
+
+        if (jumptime > Const.MAX_JUMP_TIME)
+        {
+            Resetjump();
+            return;
+        }
+
+        jumptime += Time.deltaTime;
     }
     //ダブルジャンプ
     public override void SkyJump()
     {
         rigid.y = 0.0f;
-        Jump();
+        Vector2 jump = new Vector2(0.0f, jumppower * Const.DOUBLEJUMP_BONUS);
+        rigidC.AddForce(jump, ForceMode2D.Impulse);
     }
     //地面に触った時
     public override void HitWall()
@@ -125,10 +150,41 @@ public class PlayerController : CharacterBase
         tilemapS.ShowSelectTile(itemstate);
     }
 
-    //生きているか確認する
+    //生きているか確認する処理
     public bool CheckAlive() { 
         if (Const.ALIVE == (state & Const.ALIVE)) { return true; }  //生きていたらtrueを返す
         return false;   //生きてなかったらfalseを返す
+    }
+    //ダメージを与える処理
+    public void TakeDamage()
+    {
+        if (Const.INVINCLEBLE == (itemstate & Const.INVINCLEBLE)) {
+#if CHECK
+            Debug.Log("無敵状態なのでダメージを食らわない!");
+#endif
+            return;
+        }
+#if CHECK
+        Debug.Log("ダメージを受けた!");
+#endif
+        //hpを1ずつ減らす
+        hp--;   
+        if (hp <= 0)
+        {
+            state &= ~Const.ALIVE;  //もしhpが0以下なら生存フラグを取り消す
+        }
+    }
+    //最初に戻った時の処理
+    public void Restart()
+    {
+        state |= Const.ALIVE + Const.ACTIVE;    //生存フラグをonにする
+        itemstate = 0b0000;     //アイテム状態をデフォルトにする
+        //持っているアイテムの効果を消して、全てリセットする
+        foreach(BelongItemData bData in EquipmentItem)
+        {
+            itemsBoxS.PassiveItems(this, bData);
+            bData.ResetData();
+        }
     }
 
     //所持金を所得する
@@ -140,25 +196,25 @@ public class PlayerController : CharacterBase
         //もしインデントリでまだ持ってないアイテムを使おうとしたとき
         if (EquipmentItem[equipIndex].MItemID == Const.NO_ITEM) {
             //処理を中断する
-            #if CHECK
+#if CHECK
                 Debug.Log("indexが" + equipIndex + "のアイテムはまだ何も持っていない!");
-            #endif
+#endif
             return;
         }
         else if (EquipmentItem[equipIndex].MEndurance == 0)
         {
             //処理を中断する
-            #if CHECK
+#if CHECK
                 Debug.Log("indexが" + equipIndex + "のアイテムはもう使えない!");
-            #endif
+#endif
             return;
         }
 
         itemsBoxS.UseItems(this ,EquipmentItem[equipIndex]);
         EquipmentItem[equipIndex].MActive = !(EquipmentItem[equipIndex].MActive);
-        #if CHECK
+#if CHECK
         Debug.Log("indexが" + equipIndex + "のIDが" + EquipmentItem[equipIndex].MItemID + "アイテムを使った");
-        #endif
+#endif
     }
 
     //rigidを調整する関数

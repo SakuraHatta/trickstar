@@ -42,9 +42,12 @@ public class ItemBox : MonoBehaviour
         ItemBoxList[belongItemData.MItemID].ActiveItem(Char); //引数のアイテムIDのアイテムを使用する
     }
     //引数のキャラクター型のオブジェクトに、引数のidのアイテムの効果を取り除く
-    public void PassiveItems(CharacterBase Char, int id)
+    public void PassiveItems(CharacterBase Char, BelongItemData belongItemData)
     {
-        ItemBoxList[id].StopItem(Char);
+        //使用中じゃないならアイテムを止める処理をする必要がないので処理を中断
+        if (!(belongItemData.MActive)) { return; }
+
+        ItemBoxList[belongItemData.MItemID].StopItem(Char);
     }
 
     //耐久地を減らすメゾット
@@ -64,7 +67,7 @@ public class ItemBox : MonoBehaviour
                 //もし耐久力が0になったら
                 if (bData.MEndurance == 0)  
                 {
-                    PassiveItems(Char, bData.MItemID);  //そのアイテムの効果を取り消して未使用にする
+                    PassiveItems(Char, bData);  //そのアイテムの効果を取り消して未使用にする
                     bData.MActive = false;
                     break;
                 }
