@@ -114,6 +114,11 @@ public class GamePlay : MonoBehaviour
             BackEvent();
             return true;
         }
+        //Rキーを押したときの処理
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RestartGame();
+        }
         //ESCキーを押したときの処理 
         if (Input.GetKeyDown(KeyCode.Escape))  
         {
@@ -134,7 +139,7 @@ public class GamePlay : MonoBehaviour
     private void RestartGame()
     {
         playerCS.transform.position = startPos;
-        playerCS.Restart();
+        //playerCS.Restart();
         belongItemS.OpenItems();
         belongItemS.ChangeColor();
         belongItemS.CloseItems();

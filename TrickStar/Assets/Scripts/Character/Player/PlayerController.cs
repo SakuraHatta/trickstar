@@ -195,7 +195,7 @@ public class PlayerController : CharacterBase
     {
         rigid.y = 0.0f;
         Vector2 jump = new Vector2(0.0f, jumppower);
-        jump *= Const.RIGID_TIMES;
+        jump = jump * Const.RIGID_TIMES * 0.15f;
         rigidC.AddForce(jump, ForceMode2D.Force);
     }
     //地面に触った時
@@ -249,9 +249,8 @@ public class PlayerController : CharacterBase
         }
     }
     //最初に戻った時の処理
-    public void Restart()
+    public void RestartItem()
     {
-        state |= Const.ALIVE + Const.ACTIVE;    //生存フラグをonにする
         itemstate = 0b0000;     //アイテム状態をデフォルトにする
         //持っているアイテムの効果を消して、全てリセットする
         foreach(BelongItemData bData in EquipmentItem)

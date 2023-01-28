@@ -45,6 +45,10 @@ public class BelongItem : MonoBehaviour
             MoveSelect(2);
             UseItem();
         }
+        else if (Input.GetKeyDown(KeyCode.Z))
+        {
+            playerCS.RestartItem();
+        }
 
         //‘I‘ð‚·‚é‚Æ‚«
         //if (Input.GetKeyDown(KeyCode.Return))
