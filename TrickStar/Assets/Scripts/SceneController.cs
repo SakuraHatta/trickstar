@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
-    private bool sceneMove = true;
 
     // Start is called before the first frame update
     void Start()
@@ -16,21 +15,16 @@ public class SceneController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        SceneControl();
     }
 
     private void SceneControl(){
-        if (sceneMove){
-            if (Input.GetKeyDown(KeyCode.Return)){
-                // TittleからMainにシーン移動
-                if (SceneManager.GetActiveScene().name == "TittleScene"){
-                    SceneManager.LoadScene("MapScene");
-                }
-                // EndからTittleにシーン移動
-                if (SceneManager.GetActiveScene().name == "EndScene"){
-                    SceneManager.LoadScene("EndScene");
-                }
+        if (Input.GetKeyDown(KeyCode.Return)){
+            // EndからTittleにシーン移動
+            if (SceneManager.GetActiveScene().name == "EndScene"){
+                SceneManager.LoadScene("TittleScene");
             }
         }
+        
     }
 }
