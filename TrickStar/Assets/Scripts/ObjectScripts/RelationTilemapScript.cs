@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps; //タイルマップとタイルを所得するため使用
 
 public class RelationTilemapScript : MonoBehaviour
 {
+
     [Header("TileMaps")]
     [SerializeField]
     Tilemap BlockTileMap;  //ブロックが置かれているタイルマップ
