@@ -12,11 +12,17 @@ public class CharacterBase : MonoBehaviour
     protected RelationTilemapScript tilemapS;    //タイルマップ関連のスクリプト
 
     //装備しているアイテムIDのList
+    [Space(10)]
+    [Header("BItemL")]
     [SerializeField]
     protected List<BelongItemData> EquipmentItem = new List<BelongItemData>();
     protected int Mitems; //持っているアイテム数
 
-    [Header("Parametas")]
+    [Space(10)]
+    [Header("Animation")]
+    [SerializeField]
+    protected Animator animator;
+
     //パラメーター
     protected int maxhp;          //最大体力
     protected int hp;             //体力
@@ -24,35 +30,47 @@ public class CharacterBase : MonoBehaviour
     protected float jumppower;    //ジャンプ力
     protected float speed;        //移動速度
 
+    protected int airjump;        //空中でジャンプできる回数
+    protected int limitairjump;   //空中でジャンプできる回数
+    //状態管理
+    protected uint state;            //プレイヤーのステータス
+    protected uint itemstate;        //アイテムのステータス
+    //動く力
+    protected Vector2 rigid;
+
+    //それぞれのメンバー変数のゲッターとセッター
     public int Maxhp { get { return maxhp; } set { maxhp = value; } }
     public int Hp { get { return hp; } set { hp = value; } }
     public int Power { get { return power; } set { power = value; } }
     public float Jumppower { get { return jumppower; } set { jumppower = value; } }
     public float Speed { get { return speed; } set { speed = value; } }
 
-    protected int airjump;        //空中でジャンプできる回数
-    protected int limitairjump;   //空中でジャンプできる回数
-
     public int Airjump { get { return airjump; } set { airjump = value; } }
     public int Limitairjump { get { return limitairjump; } set { limitairjump = value; } }
 
-    protected Vector2 rigid;      //動く力
-
-    //状態管理
-    protected uint state;            //プレイヤーのステータス
-    protected uint itemstate;        //アイテムのステータス
-
+    public uint State { get { return state; } }
     public uint Itemstate { get { return itemstate; } set { itemstate = value; } }
 
+    //初期処理
     public CharacterBase()
     {
-        state = 0b1001;
+        state = Const.ALIVE | Const.ACTIVE;
         itemstate = 0b0000;
+
         for (int i = 0; i < Const.MAX_ITEMS; i++)
         {
             EquipmentItem.Add(new BelongItemData());
         }
     }
+
+    public virtual void AnimationUpdate() {;}
+
+    public virtual void KeyController() {;}      //キーごとのアクション
+    public virtual void Jump() {;}               //ジャンプするメゾット
+    public virtual void SkyJump() {;}            //空中でジャンプする処理(ダブルジャンプ)
+    public virtual void Walk(int direction) {;}  //移動するメゾット
+    public virtual void Attack() {;}             //攻撃するメゾット
+    public virtual void HitWall() {;}            //壁に当たった時の処理
 
     //メゾット
     public void SetParameta(CharacterData charData)   //CharacterDataに合わせてパラメーターを変更する
@@ -89,15 +107,6 @@ public class CharacterBase : MonoBehaviour
             itemsBoxS.UseItems(this, bData);
         }
     }
-
-    public virtual void CharacterUpdate() {;}
-
-    public virtual void KeyController() {;}      //キーごとのアクション
-    public virtual void Jump() {;}               //ジャンプするメゾット
-    public virtual void SkyJump() {;}            //空中でジャンプする処理(ダブルジャンプ)
-    public virtual void Walk(int direction) {;}  //移動するメゾット
-    public virtual void Attack() {;}             //攻撃するメゾット
-    public virtual void HitWall() {;}            //壁に当たった時の処理
     
     public Vector2 GetPosition() { return this.transform.position; }
     public Vector2 GetRigid() { return rigid; }  //rigidを所得するメゾット

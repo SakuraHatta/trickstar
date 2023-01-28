@@ -18,14 +18,50 @@ public class PlayerController : CharacterBase
     private float jumptime;
     private int money;  //所持金
 
-    //ジャンプ時間をリセットする
-    private void Resetjump()
+    //アニメーション
+    public override void AnimationUpdate()
     {
-        state &= ~Const.JUMPING;
-        jumptime = 0.0f;
-        rigid.y = 0.0f;
-    }
+        string playerstate = "none";
 
+        //アイテム欄を開いているかのフラグ
+        if (Const.INVENTORY == (state & Const.INVENTORY))
+        {
+            playerstate = "Items";
+            animator.SetBool("Item", true);
+            return;
+        }
+        else
+        {
+            animator.SetBool("Item", false);
+        }
+
+        //飛んでいるかを確認するメゾット
+        if (Const.JUMP == (state & Const.JUMP))
+        {
+            playerstate = "Jump";
+            animator.SetBool("Jump", true);
+        }
+        else
+        {
+            animator.SetBool("Jump", false);
+        }
+
+        //歩いているかを確認するメゾット
+        if (Const.WALK == (state & Const.WALK))
+        {
+            playerstate = "Walk";
+            animator.SetBool("Walk", true);
+        }
+        else
+        {
+            playerstate = "Idel";
+            animator.SetBool("Walk", false);
+        }
+
+#if CHECK
+        Debug.Log("プレイヤーの状態は : " + playerstate + "です。");
+#endif
+    }
     //キー入力
     public override void KeyController()
     {
@@ -38,10 +74,17 @@ public class PlayerController : CharacterBase
             Walk(-1);
         }
         //Dキーを押したとき
-        if (Input.GetKey(KeyCode.D))//左に移動
+        else if (Input.GetKey(KeyCode.D))//左に移動
         {
             Walk(1);
         }
+        //移動キーを押していないとき
+        else if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+        {
+            //もし移動フラグが立っていたらおろす
+            if (Const.WALK == (state & Const.WALK)) { state &= ~Const.WALK; }
+        }
+
         //スペースキーを押したとき
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -78,7 +121,7 @@ public class PlayerController : CharacterBase
                     belongItemsS.ChangeColor();
 #if CHECK
                         Debug.Log("タイルを破壊");
-#endif          
+#endif
                     return;
                 }
 #if CHECK
@@ -98,24 +141,45 @@ public class PlayerController : CharacterBase
 #endif
                     return;
                 }
-                #if CHECK
+#if CHECK
                     Debug.Log("生成失敗…");
-                #endif
+#endif
             }
         }
     }
     //歩く処理
     public override void Walk(int direction)
     {
-        Vector2 walk = new Vector2(speed * direction, 0.0f);
-        rigidC.AddForce(walk, ForceMode2D.Force);        
+        //もし移動フラグが立っていないなら立てる
+        if (Const.WALK != (state & Const.WALK)) { state |= Const.WALK; }
+        
+        //もし最大速度より早かったら処理を中断
+        if (rigid.x * rigid.x > speed * speed)
+        {
+            return;
+            //if (rigid.x > 0.0f) //rigidが正の数の時
+            //    rigid.x = speed;
+            //else                //rigidが負の数の時
+            //    rigid.x = -speed;
+        }
+
+        //移動する力のベクトルをつくる
+        Vector2 walk = new Vector2(speed * direction * Time.deltaTime, 0.0f);
+        walk *= Const.RIGID_TIMES;
+
+        //プレイヤーの向きを変更
+        this.transform.localScale = new Vector2(Const.PLAYER_SCALE * direction, Const.PLAYER_SCALE);
+
+        //実際に力を加える
+        rigidC.AddForce(walk, ForceMode2D.Force);
     }
     //ジャンプ
     public override void Jump()
     {
         if (Const.JUMPING != (state & Const.JUMPING)) { return; }
 
-        Vector2 jump = new Vector2(0.0f, jumppower);
+        Vector2 jump = new Vector2(0.0f, jumppower * Time.deltaTime);
+        jump *= Const.RIGID_TIMES;
         rigidC.AddForce(jump, ForceMode2D.Force);
 
         if (jumptime > Const.MAX_JUMP_TIME)
@@ -130,7 +194,8 @@ public class PlayerController : CharacterBase
     public override void SkyJump()
     {
         rigid.y = 0.0f;
-        Vector2 jump = new Vector2(0.0f, jumppower * Const.DOUBLEJUMP_BONUS);
+        Vector2 jump = new Vector2(0.0f, jumppower);
+        jump *= Const.RIGID_TIMES;
         rigidC.AddForce(jump, ForceMode2D.Impulse);
     }
     //地面に触った時
@@ -144,6 +209,15 @@ public class PlayerController : CharacterBase
             airjump = 0;
         }
     }
+
+    //ジャンプ時間をリセットする
+    private void Resetjump()
+    {
+        state &= ~Const.JUMPING;
+        jumptime = 0.0f;
+        rigid.y = 0.0f;
+    }
+
     //マウスの位置にタイルを表示させる処理
     public void SelectTile()
     {
@@ -222,15 +296,21 @@ public class PlayerController : CharacterBase
     {
         rigid = rigidC.velocity;    //実際のrigidをRigidBody2Dコンポーネントから持ってくる
 
-        //rigid.xがspeedより大きくならないようにする
-        if (rigid.x * rigid.x > speed * speed)
-        {
-            if (rigid.x > 0.0f) //rigidが正の数の時
-                rigid.x = speed;    
-            else                //rigidが負の数の時
-                rigid.x = -speed;
-        }
-
         rigidC.velocity = rigid;    //調整したrigidを設定する
+    }
+
+    //itemを開いた時の処理
+    public void OpenItem()
+    {
+        //アイテムを開いてないとき
+        if (Const.INVENTORY != (state & Const.INVENTORY))
+        {
+            state |= Const.INVENTORY;
+        }
+        //アイテムを開いているとき
+        else if (Const.INVENTORY == (state & Const.INVENTORY))
+        {
+            state &= ~Const.INVENTORY;
+        }
     }
 }

@@ -15,13 +15,15 @@ static class Const
 
 //キャラクター
     //キャラクターのステータス
-    public const uint ALIVE = 0b00001;   //生存フラグ
-    public const uint JUMP = 0b00010;    //ジャンプフラグ
-    public const uint ATTACK = 0b00100;  //攻撃フラグ
-    public const uint ACTIVE = 0b01000;  //起動フラグ
+    public const uint ALIVE = 0x001;    //生存フラグ
+    public const uint WALK = 0x002;     //移動フラグ
+    public const uint JUMP = 0x004;     //ジャンプフラグ
+    public const uint JUMPING = 0x008;  //ジャンプ中
+    public const uint INVENTORY = 0x010;//アイテム欄 
+    public const uint ATTACK = 0x020;   //攻撃フラグ
+    public const uint ACTIVE = 0x040;   //起動フラグ
 
     //プレイヤー
-    public const uint JUMPING = 0b10000;    //ジャンプ中のフラグ
     public const float MAX_JUMP_TIME = 0.3f;    //最大ジャンプ時間
 
     public const float PLAYER_SCALE = 1.0f;
@@ -44,8 +46,6 @@ static class Const
     public const int NO_ITEM = -1;      //何の持ってないときのアイテムID
     //アイテムの数
     public const int TYPE_ITEMS = 5;    //アイテムの種類
-    //アイテムの効果
-    public const float DOUBLEJUMP_BONUS = 2.5f;    //ダブルジャンプ
 
 //ショップ
     public const int CARD_NUMBER = 3;   //ショップで売られているカードの枚数
@@ -54,9 +54,12 @@ static class Const
 
 //タイルマップ
     //タイル
-    public const float TILE_SIZE = 1.0f;
+    public const float TILE_SIZE = 1.0f;    //1つのタイルの大きさ
 
-    //UIエフェクト
+//UIエフェクト
     //tween
     public const float MAX_TWEEN = 1.0f;
+
+    //Physics関連
+    public const float RIGID_TIMES = 200.0f;   //rigidにかける数
 }

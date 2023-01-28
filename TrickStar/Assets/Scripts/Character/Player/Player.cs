@@ -38,7 +38,13 @@ public class Player : MonoBehaviour
     //プレイヤーの基本処理
     public void Update()
     {
-        if (!playerCS.GetActive()) { return; }
+        playerCS.AnimationUpdate(); //アニメーションのアップデート
+
+        //もしプレイヤーが機能してないならここで中断する
+        if (!playerCS.GetActive()) {
+            Debug.Log("プレイヤーは機能していない!");
+            return;
+        }
 
         playerCS.KeyController();  //プレイヤーのキー操作処理
         playerCS.AdjustRigid();    //プレイヤーのrigid調整

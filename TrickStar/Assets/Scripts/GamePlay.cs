@@ -33,7 +33,7 @@ public class GamePlay : MonoBehaviour
         {
             gameState |= Const.PAUSE;
             Time.timeScale = 0.0f;
-            playerCS.SetActive(false);
+            ChangePlayerActive(false);
         }
         else 
         {
@@ -41,19 +41,19 @@ public class GamePlay : MonoBehaviour
             gameState &= ~Const.PAUSE;
             Time.timeScale = Const.DEFAULT_TIME_SCALE;
             Time.fixedDeltaTime = fixedTimeScale * Time.timeScale;
-            playerCS.SetActive(true);
+            ChangePlayerActive(false);
         }
     }
     //ショップ画面のイベント
     private void ShopEvent() 
     {
-        if (Const.PAUSE == (gameState & Const.PAUSE)) { return; }
+        if (Const.PAUSE == (gameState & Const.PAUSE) || Const.ITEM == (gameState & Const.ITEM)) { return; }
 
         if (Const.SHOP != (gameState & Const.SHOP) && shopS.CheckNearShop())
         {
             shopS.OpenShop();
             gameState |= Const.SHOP;
-            playerCS.SetActive(false);
+            ChangePlayerActive(false);
         }
     }
     //アイテム欄のイベント
@@ -61,26 +61,29 @@ public class GamePlay : MonoBehaviour
     {
         if (Const.PAUSE == (gameState & Const.PAUSE) || Const.SHOP == (gameState & Const.SHOP)) { return; }
 
-        if (Const.ITEM != (gameState & Const.ITEM))
+        if (Const.ITEM != (gameState & Const.ITEM) && Const.JUMP != (playerCS.State & Const.JUMP))
         {
             gameState |= Const.ITEM;
             belongItemS.OpenItems();
             belongItemS.ChangeColor();
+            playerCS.OpenItem();
+            ChangePlayerActive(false);
         }
     }
-    
+    //バックスペース押したときのイベント
     private void BackEvent()
     {
         if (Const.SHOP == (gameState & Const.SHOP))     //SHOP中ならSHOP状態を解除
         {
             gameState &= ~Const.SHOP;
             shopS.ExitShop();
-            playerCS.SetActive(true);
+            ChangePlayerActive(true);
         }
         if (Const.ITEM == (gameState & Const.ITEM))  //アイテム欄を開いていたらアイテム欄を閉じる
         {
             gameState &= ~Const.ITEM;
-            belongItemS.CloseItems();
+            playerCS.OpenItem();
+            ChangePlayerActive(true);
         }
     }
     //キーを押したときの処理
@@ -93,7 +96,7 @@ public class GamePlay : MonoBehaviour
             return true;
         }
         //スペースキーを押した時の処理
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             ShopEvent();
             return true;
@@ -121,6 +124,11 @@ public class GamePlay : MonoBehaviour
         return false;
     }
 
+    //プライヤーの起動フラグを引数の値に変更するメゾット
+    private void ChangePlayerActive(bool b)
+    {
+        playerCS.SetActive(b);
+    }
     //プレイヤーが死亡した時にする処理
     private void RestartGame()
     {
@@ -137,7 +145,7 @@ public class GamePlay : MonoBehaviour
         this.fixedTimeScale = Time.fixedDeltaTime;  //fixedUpdateの時間を保存する
         shopS.StartShop();  //ショップの初期処理をする
         belongItemS.StartBelongItem();  //アイテム欄の初期処理をする
-        startPos = playerCS.transform.position;
+        startPos = playerCS.transform.position; //スタート地点を始まりの位置にする
     }
     //主なゲームループ
     private void Update()

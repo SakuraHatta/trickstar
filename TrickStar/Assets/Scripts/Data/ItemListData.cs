@@ -22,8 +22,6 @@ public class ItemData   //アイテムのデータクラス
     [SerializeField]
     private int endurance;  //アイテムの耐久力
     [SerializeField]
-    private int price;      //アイテムの値段
-    [SerializeField]
     private Sprite image;   //アイテムの画像
     [SerializeField]
     private string info;    //アイテムの説明文
@@ -32,7 +30,6 @@ public class ItemData   //アイテムのデータクラス
     public string Name { get { return name; } }
     public int ID { get { return id; } }
     public int Endurance { get { return endurance; } }
-    public int Price { get { return price; } }
     public Sprite Image { get { return image; } }
     public string Info { get { return info; } }
 }
