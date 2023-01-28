@@ -4,6 +4,16 @@ using UnityEngine;
 
 static class Const
 {
+//タイトル
+    public const uint DEFAULT_T = 0x001;  //通常状態
+    public const uint SELECTED_T = 0x002; //選択中
+    public const uint FADE_T = 0x004;     //シーン変更中
+
+    //UIコントローラー
+    public const uint DEFAULT_TEXT = 0x001;  //通常
+    public const uint TWEEN_TEXT = 0x002;    //移動中
+    public const uint FLASH_TEXT = 0x004;    //点滅中
+
 //ゲームステータス
     //時間関係
     public const float DEFAULT_TIME_SCALE = 1.0f;   //基本の時間間隔
