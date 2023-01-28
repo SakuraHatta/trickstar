@@ -196,7 +196,7 @@ public class PlayerController : CharacterBase
         rigid.y = 0.0f;
         Vector2 jump = new Vector2(0.0f, jumppower);
         jump *= Const.RIGID_TIMES;
-        rigidC.AddForce(jump, ForceMode2D.Impulse);
+        rigidC.AddForce(jump, ForceMode2D.Force);
     }
     //ínñ Ç…êGÇ¡ÇΩéû
     public override void HitWall()

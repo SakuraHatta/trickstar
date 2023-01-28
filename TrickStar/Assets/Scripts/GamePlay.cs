@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GamePlay : MonoBehaviour
 {
@@ -163,7 +164,8 @@ public class GamePlay : MonoBehaviour
         //プレイヤーが死亡した場合
         if (!(playerCS.CheckAlive()))
         {
-            RestartGame();
+            //RestartGame();
+            SceneManager.LoadScene("MapScene");
         }
 
         //ショップ場面を開いている場合
